@@ -1,4 +1,5 @@
 import type { ToolDefinition } from "./toolTypes.js";
+import { validateReadOnlySql } from "../security/sqlSafety.js";
 
 /**
  * 1. execute_sql
@@ -27,7 +28,7 @@ export const executeSqlTool: ToolDefinition = {
     if (typeof sql !== "string" || !sql.trim()) {
       throw new Error("sql must be a non-empty string");
     }
-
+     validateReadOnlySql(sql);
     return await context.db.executeSql(sql);
   },
 };

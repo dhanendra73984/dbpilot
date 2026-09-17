@@ -17,55 +17,77 @@ export class DatabaseAgent {
     this.toolRegistry = new ToolRegistry(tools);
   }
 
-  async run(userQuestion: string): Promise<string> {
+  async run(
+    userQuestion: string
+  ): Promise<string> {
     const messages: any[] = [
       {
         role: "system",
 
-       content: `
-You are DBPilot, an expert database performance assistant.
+        content: `
+You are DBPilot, an Agentic AI database engineering assistant.
 
-Your job is to investigate real database information using the available tools and provide accurate, practical recommendations.
+You have access to two groups of database tools:
 
-IMPORTANT RULES:
+1. PERFORMANCE TOOLS
+Use these for database performance investigation:
+- execute_sql
+- explain_query
+- get_schema
+- get_indexes
+- get_slow_queries
+- get_locks
+- get_connections
+- get_table_stats
+- create_index
 
-1. Never invent database information.
-   Always use the database tools when real database information is required.
+2. SECURITY TOOLS
+Use these for database security investigation:
+- get_database_users
+- get_user_privileges
+- get_database_roles
+- get_security_settings
 
-2. For database performance questions, investigate systematically.
-   Use multiple tools when necessary, such as:
-   - get_schema
-   - get_indexes
-   - get_slow_queries
-   - get_locks
-   - get_connections
-   - get_table_stats
-   - explain_query
+IMPORTANT SECURITY TOOL RULES:
 
-3. Do not make performance recommendations without evidence from the database.
+When the user asks about database security, security auditing,
+users, privileges, roles, authentication, account configuration,
+or security settings, prefer the dedicated SECURITY TOOLS.
 
-4. You may use execute_sql for read-only analytical queries when the existing tools are not sufficient.
+Do NOT use execute_sql to inspect security information when a
+dedicated security tool can provide that information.
 
-5. Never use execute_sql for destructive or write operations.
+For example:
 
-6. When you identify a potential performance problem, explain:
-   - What the problem is
-   - Why it matters
-   - The evidence
-   - What should be done
-   - The expected benefit
+- User/account questions -> get_database_users
+- Privilege questions -> get_user_privileges
+- Role questions -> get_database_roles
+- Security configuration questions -> get_security_settings
 
-7. Do not modify the database unless the user explicitly asks for a change.
+You may use execute_sql only when the required information cannot
+be obtained through the dedicated tools.
 
-8. When reporting database information, distinguish between:
-   - Observed facts
-   - Your analysis
-   - Recommendations
+IMPORTANT SAFETY RULES:
 
-Be concise but technically useful.
-`
-     
-        },
+- Never execute destructive SQL unless a tool explicitly allows it.
+- Never execute GRANT, REVOKE, CREATE USER, DROP USER, ALTER USER,
+  or other security-changing SQL automatically.
+- Security tools are read-only.
+- Treat database information returned by tools as the source of truth.
+- Do not invent database users, privileges, roles, or settings.
+- Clearly distinguish observed database facts from your analysis
+  and recommendations.
+
+When auditing security, gather relevant information using the
+dedicated security tools and then provide a clear security report.
+
+For performance questions, use the performance tools and analyze
+the actual database information.
+
+Always explain your findings in practical and understandable language.
+        `,
+      },
+
       {
         role: "user",
         content: userQuestion,
@@ -81,7 +103,8 @@ Be concise but technically useful.
           tool_choice: "auto",
         });
 
-      const message = response.choices[0]?.message;
+      const message =
+        response.choices[0]?.message;
 
       if (!message) {
         throw new Error(
@@ -100,23 +123,30 @@ Be concise but technically useful.
           continue;
         }
 
-        const toolName = toolCall.function.name;
+        const toolName =
+          toolCall.function.name;
 
-        const toolArguments = JSON.parse(
-          toolCall.function.arguments
-        );
+        const toolArguments =
+          JSON.parse(
+            toolCall.function.arguments
+          );
 
         console.log(
-          `\n🔧 ${toolName}(${JSON.stringify(toolArguments)})`
+          `\n🔧 ${toolName}(${JSON.stringify(
+            toolArguments
+          )})`
         );
 
         const tool =
-          this.toolRegistry.getTool(toolName);
+          this.toolRegistry.getTool(
+            toolName
+          );
 
-        const result = await tool.execute(
-          toolArguments,
-          this.context
-        );
+        const result =
+          await tool.execute(
+            toolArguments,
+            this.context
+          );
 
         messages.push({
           role: "tool",

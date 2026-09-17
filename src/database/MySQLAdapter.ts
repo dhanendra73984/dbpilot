@@ -2,6 +2,7 @@ import mysql, {
   type Connection,
   type RowDataPacket,
   type ResultSetHeader,
+  type Pool,
 } from "mysql2/promise";
 
 import { env } from "../config/env.js";
@@ -74,7 +75,21 @@ interface TableStatsRow extends RowDataPacket {
 
 export class MySQLAdapter implements DatabaseAdapter {
   private connection: Connection | null = null;
+  private readonly pool: Pool;
 
+  constructor() {
+    this.pool = mysql.createPool({
+      host: env.db.host,
+      port: env.db.port,
+      user: env.db.user,
+      password: env.db.password,
+      database: env.db.database,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+    });
+  }
+  
   async connect(): Promise<void> {
     if (this.connection) {
       return;
@@ -101,6 +116,14 @@ export class MySQLAdapter implements DatabaseAdapter {
 
     console.log("🔌 MySQL disconnected");
   }
+
+    getPool(): Pool {
+    return this.pool;
+  }
+
+
+  
+  
 
   private getConnection(): Connection {
     if (!this.connection) {

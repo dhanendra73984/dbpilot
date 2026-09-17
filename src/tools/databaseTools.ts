@@ -9,6 +9,8 @@ export const executeSqlTool: ToolDefinition = {
 
   description:
     "Execute a SQL statement against the connected database and return the database result.",
+     riskLevel: "read",
+
 
   parameters: {
     type: "object",
@@ -43,6 +45,8 @@ export const explainQueryTool: ToolDefinition = {
   description:
     "Analyze how MySQL plans to execute a SQL query using EXPLAIN. Use this to investigate query performance and identify possible indexing or execution-plan problems.",
 
+     riskLevel: "read",
+
   parameters: {
     type: "object",
     properties: {
@@ -75,6 +79,8 @@ export const getSchemaTool: ToolDefinition = {
 
   description:
     "Get the database schema, including tables and their columns, data types, nullability, defaults, keys, and extra attributes.",
+
+  riskLevel: "read",
 
   parameters: {
     type: "object",
@@ -110,6 +116,8 @@ export const getIndexesTool: ToolDefinition = {
   description:
     "Get all indexes defined on a database table, including index name, columns, uniqueness, column order, and index type.",
 
+  riskLevel: "read",
+
   parameters: {
     type: "object",
     properties: {
@@ -143,6 +151,8 @@ export const getSlowQueriesTool: ToolDefinition = {
   description:
     "Get the database queries consuming the most execution time, including execution count, total time, average time, rows examined, and rows returned.",
 
+  riskLevel: "read",
+
   parameters: {
     type: "object",
     properties: {},
@@ -164,6 +174,8 @@ export const getLocksTool: ToolDefinition = {
   description:
     "Inspect current database lock information to identify locking activity and potential contention.",
 
+  riskLevel: "read",
+
   parameters: {
     type: "object",
     properties: {},
@@ -184,6 +196,7 @@ export const getConnectionsTool: ToolDefinition = {
 
   description:
     "Get active MySQL database connections and their process IDs, users, hosts, commands, states, durations, and currently executing SQL information.",
+   riskLevel: "read",
 
   parameters: {
     type: "object",
@@ -205,6 +218,8 @@ export const getTableStatsTool: ToolDefinition = {
 
   description:
     "Get table statistics including estimated row count, data size, index size, and total size. Provide a table name to inspect one table, or provide an empty string to inspect all tables.",
+
+  riskLevel: "read",
 
   parameters: {
     type: "object",
@@ -239,6 +254,8 @@ export const createIndexTool: ToolDefinition = {
 
   description:
     "Create an index on a database table using the specified index name and columns. This is a write operation and should only be used when creating an index is justified.",
+
+  riskLevel: "write",
 
   parameters: {
     type: "object",

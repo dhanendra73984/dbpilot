@@ -1,10 +1,8 @@
-
 export interface SecurityAdapter {
   getDatabaseUsers(): Promise<DatabaseUser[]>;
 
   getUserPrivileges(
-    username?: string,
-    host?: string
+    username?: string
   ): Promise<UserPrivilege[]>;
 
   getDatabaseRoles(): Promise<DatabaseRole[]>;
@@ -38,4 +36,3 @@ export interface SecuritySetting {
   setting: string;
   value: string | null;
 }
-

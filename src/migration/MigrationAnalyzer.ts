@@ -1,3 +1,4 @@
+
 import type {
   MigrationColumn,
   MigrationForeignKey,
@@ -9,6 +10,11 @@ export interface MigrationColumnAnalysis {
   column: string;
   mysqlType: string;
   postgresqlType: string;
+  nullable: boolean;
+  defaultValue: unknown;
+  isAutoIncrement: boolean;
+  isPrimaryKey: boolean;
+  ordinalPosition: number;
   issues: string[];
 }
 
@@ -44,74 +50,58 @@ export function analyzeMigration(
     MigrationUniqueConstraint[]
   >
 ): MigrationAnalysis {
-  const analyzedTables: MigrationTableAnalysis[] =
-    [];
+  const analyzedTables: MigrationTableAnalysis[] = [];
 
   let totalWarnings = 0;
   let totalColumns = 0;
 
   for (const tableName of tables) {
-    const columns =
-      schemas.get(tableName) ?? [];
-
-    const tableIndexes =
-      indexes.get(tableName) ?? [];
-
+    const columns = schemas.get(tableName) ?? [];
+    const tableIndexes = indexes.get(tableName) ?? [];
     const tableForeignKeys =
       foreignKeys.get(tableName) ?? [];
-
     const tablePrimaryKey =
       primaryKeys.get(tableName) ?? [];
-
     const tableUniqueConstraints =
       uniqueConstraints.get(tableName) ?? [];
 
-    const columnAnalysis: MigrationColumnAnalysis[] =
-      [];
-
+    const columnAnalysis: MigrationColumnAnalysis[] = [];
     const warnings: string[] = [];
 
     for (const column of columns) {
-      const analysis =
-        analyzeColumn(column);
-
-      columnAnalysis.push(
-        analysis
+      const analysis = analyzeColumn(
+        column,
+        tablePrimaryKey
       );
+
+      columnAnalysis.push(analysis);
 
       if (analysis.issues.length > 0) {
         warnings.push(
           ...analysis.issues.map(
-            (issue) =>
-              `${column.name}: ${issue}`
+            (issue) => `${column.name}: ${issue}`
           )
         );
       }
     }
 
-    if (tableForeignKeys.length > 0) {
-      for (const foreignKey of tableForeignKeys) {
-        if (
-          foreignKey.updateRule !==
-            "NO ACTION" &&
-          foreignKey.updateRule !==
-            "RESTRICT"
-        ) {
-          warnings.push(
-            `Foreign key ${foreignKey.constraintName} uses ON UPDATE ${foreignKey.updateRule}. Verify PostgreSQL behavior.`
-          );
-        }
+    for (const foreignKey of tableForeignKeys) {
+      if (
+        foreignKey.updateRule !== "NO ACTION" &&
+        foreignKey.updateRule !== "RESTRICT"
+      ) {
+        warnings.push(
+          `Foreign key ${foreignKey.constraintName} uses ON UPDATE ${foreignKey.updateRule}. Verify PostgreSQL behavior.`
+        );
+      }
 
-        if (
-          foreignKey.deleteRule !==
-            "NO ACTION" &&
-          foreignKey.deleteRule !==
-            "RESTRICT"
-        ) {
-          warnings.push(
-            `Foreign key ${foreignKey.constraintName} uses ON DELETE ${foreignKey.deleteRule}.`
-          );
-        }
+      if (
+        foreignKey.deleteRule !== "NO ACTION" &&
+        foreignKey.deleteRule !== "RESTRICT"
+      ) {
+        warnings.push(
+          `Foreign key ${foreignKey.constraintName} uses ON DELETE ${foreignKey.deleteRule}.`
+        );
       }
     }
 
@@ -121,8 +111,7 @@ export function analyzeMigration(
       indexes: tableIndexes,
       primaryKey: tablePrimaryKey,
       foreignKeys: tableForeignKeys,
-      uniqueConstraints:
-        tableUniqueConstraints,
+      uniqueConstraints: tableUniqueConstraints,
       warnings,
     });
 
@@ -133,9 +122,7 @@ export function analyzeMigration(
   return {
     sourceDatabase: "MySQL",
     targetDatabase: "PostgreSQL",
-
     tables: analyzedTables,
-
     summary: {
       totalTables: tables.length,
       totalWarnings,
@@ -145,38 +132,25 @@ export function analyzeMigration(
 }
 
 function analyzeColumn(
-  column: MigrationColumn
+  column: MigrationColumn,
+  primaryKeyColumns: string[]
 ): MigrationColumnAnalysis {
-  const mysqlType =
-    column.dataType.toLowerCase();
-
+  const mysqlType = column.dataType.toLowerCase();
   const issues: string[] = [];
 
-  let postgresqlType =
-    mapMySqlTypeToPostgreSQL(
-      mysqlType
-    );
+  const postgresqlType =
+    mapMySqlTypeToPostgreSQL(mysqlType);
 
-  if (
-    mysqlType.includes("enum")
-  ) {
+  if (mysqlType.startsWith("enum")) {
     issues.push(
       "ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type."
     );
   }
 
-  if (
-    mysqlType.includes("set")
-  ) {
+  if (mysqlType.startsWith("set")) {
     issues.push(
       "MySQL SET has no direct PostgreSQL equivalent and requires migration-specific handling."
     );
-  }
-
-  if (
-    mysqlType === "json"
-  ) {
-    postgresqlType = "JSONB";
   }
 
   if (
@@ -188,39 +162,28 @@ function analyzeColumn(
     );
   }
 
-  if (
-    column.isAutoIncrement
-  ) {
+  if (column.isAutoIncrement) {
     issues.push(
       "AUTO_INCREMENT requires PostgreSQL identity/sequence handling."
     );
   }
 
   if (
-    column.defaultValue !==
-      null &&
-    typeof column.defaultValue ===
-      "string"
+    column.defaultValue !== null &&
+    typeof column.defaultValue === "string"
   ) {
     const defaultValue =
-      column.defaultValue
-        .toLowerCase();
+      column.defaultValue.toLowerCase();
 
     if (
-      defaultValue.includes(
-        "current_timestamp()"
-      )
+      defaultValue.includes("current_timestamp()")
     ) {
       issues.push(
         "Verify CURRENT_TIMESTAMP() default syntax for PostgreSQL."
       );
     }
 
-    if (
-      defaultValue.includes(
-        "uuid()"
-      )
-    ) {
+    if (defaultValue.includes("uuid()")) {
       issues.push(
         "UUID() is MySQL-specific and requires PostgreSQL UUID generation handling."
       );
@@ -231,6 +194,13 @@ function analyzeColumn(
     column: column.name,
     mysqlType: column.dataType,
     postgresqlType,
+    nullable: column.nullable,
+    defaultValue: column.defaultValue,
+    isAutoIncrement: column.isAutoIncrement,
+    isPrimaryKey:
+      column.isPrimaryKey ||
+      primaryKeyColumns.includes(column.name),
+    ordinalPosition: column.ordinalPosition,
     issues,
   };
 }
@@ -238,9 +208,7 @@ function analyzeColumn(
 function mapMySqlTypeToPostgreSQL(
   mysqlType: string
 ): string {
-  if (
-    mysqlType.startsWith("bigint")
-  ) {
+  if (mysqlType.startsWith("bigint")) {
     return "BIGINT";
   }
 
@@ -251,21 +219,15 @@ function mapMySqlTypeToPostgreSQL(
     return "INTEGER";
   }
 
-  if (
-    mysqlType.startsWith("mediumint")
-  ) {
+  if (mysqlType.startsWith("mediumint")) {
     return "INTEGER";
   }
 
-  if (
-    mysqlType.startsWith("smallint")
-  ) {
+  if (mysqlType.startsWith("smallint")) {
     return "SMALLINT";
   }
 
-  if (
-    mysqlType.startsWith("tinyint")
-  ) {
+  if (mysqlType.startsWith("tinyint")) {
     return "SMALLINT";
   }
 
@@ -276,15 +238,11 @@ function mapMySqlTypeToPostgreSQL(
     return "NUMERIC";
   }
 
-  if (
-    mysqlType.startsWith("float")
-  ) {
+  if (mysqlType.startsWith("float")) {
     return "REAL";
   }
 
-  if (
-    mysqlType.startsWith("double")
-  ) {
+  if (mysqlType.startsWith("double")) {
     return "DOUBLE PRECISION";
   }
 
@@ -295,15 +253,11 @@ function mapMySqlTypeToPostgreSQL(
     return "BOOLEAN";
   }
 
-  if (
-    mysqlType.startsWith("char")
-  ) {
+  if (mysqlType.startsWith("char")) {
     return "CHAR";
   }
 
-  if (
-    mysqlType.startsWith("varchar")
-  ) {
+  if (mysqlType.startsWith("varchar")) {
     return "VARCHAR";
   }
 
@@ -316,60 +270,40 @@ function mapMySqlTypeToPostgreSQL(
     return "TEXT";
   }
 
-  if (
-    mysqlType.startsWith("date")
-  ) {
+  if (mysqlType.startsWith("datetime")) {
+    return "TIMESTAMP";
+  }
+
+  if (mysqlType.startsWith("timestamp")) {
+    return "TIMESTAMP";
+  }
+
+  if (mysqlType.startsWith("date")) {
     return "DATE";
   }
 
-  if (
-    mysqlType.startsWith("datetime")
-  ) {
-    return "TIMESTAMP";
-  }
-
-  if (
-    mysqlType.startsWith("timestamp")
-  ) {
-    return "TIMESTAMP";
-  }
-
-  if (
-    mysqlType.startsWith("time")
-  ) {
+  if (mysqlType.startsWith("time")) {
     return "TIME";
   }
 
-  if (
-    mysqlType.startsWith("year")
-  ) {
+  if (mysqlType.startsWith("year")) {
     return "INTEGER";
   }
 
-  if (
-    mysqlType.startsWith("json")
-  ) {
+  if (mysqlType.startsWith("json")) {
     return "JSONB";
   }
 
   if (
     mysqlType.startsWith("binary") ||
     mysqlType.startsWith("varbinary") ||
-    mysqlType.startsWith("blob") ||
-    mysqlType.startsWith("tinyblob") ||
-    mysqlType.startsWith("mediumblob") ||
-    mysqlType.startsWith("longblob")
+    mysqlType.includes("blob")
   ) {
     return "BYTEA";
   }
 
   if (
-    mysqlType.startsWith("enum")
-  ) {
-    return "TEXT";
-  }
-
-  if (
+    mysqlType.startsWith("enum") ||
     mysqlType.startsWith("set")
   ) {
     return "TEXT";

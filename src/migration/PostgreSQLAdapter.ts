@@ -69,7 +69,7 @@ export class MySQLMigrationAdapter
       await this.pool.getConnection();
 
     try {
-      await connection.ping();
+       await connection.ping();
 
       console.log(
         "✅ Migration adapter connected to MySQL"

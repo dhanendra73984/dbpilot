@@ -1,0 +1,753 @@
+{
+  "sourceDatabase": "MySQL",
+  "targetDatabase": "PostgreSQL",
+  "tableCreationOrder": [
+    "customers",
+    "orders",
+    "order_items"
+  ],
+  "columnConversions": [
+    {
+      "tableName": "customers",
+      "columnName": "id",
+      "mysqlType": "bigint unsigned",
+      "postgresqlType": "BIGINT",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": true,
+      "isPrimaryKey": true,
+      "ordinalPosition": 1,
+      "issues": [
+        "AUTO_INCREMENT requires PostgreSQL identity/sequence handling."
+      ]
+    },
+    {
+      "tableName": "customers",
+      "columnName": "customer_code",
+      "mysqlType": "varchar(30)",
+      "postgresqlType": "VARCHAR",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 2,
+      "issues": []
+    },
+    {
+      "tableName": "customers",
+      "columnName": "full_name",
+      "mysqlType": "varchar(150)",
+      "postgresqlType": "VARCHAR",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 3,
+      "issues": []
+    },
+    {
+      "tableName": "customers",
+      "columnName": "email",
+      "mysqlType": "varchar(255)",
+      "postgresqlType": "VARCHAR",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 4,
+      "issues": []
+    },
+    {
+      "tableName": "customers",
+      "columnName": "phone",
+      "mysqlType": "varchar(20)",
+      "postgresqlType": "VARCHAR",
+      "nullable": true,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 5,
+      "issues": []
+    },
+    {
+      "tableName": "customers",
+      "columnName": "age",
+      "mysqlType": "tinyint unsigned",
+      "postgresqlType": "SMALLINT",
+      "nullable": true,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 6,
+      "issues": []
+    },
+    {
+      "tableName": "customers",
+      "columnName": "credit_limit",
+      "mysqlType": "decimal(12,2)",
+      "postgresqlType": "NUMERIC",
+      "nullable": false,
+      "defaultValue": "0.00",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 7,
+      "issues": []
+    },
+    {
+      "tableName": "customers",
+      "columnName": "account_status",
+      "mysqlType": "enum('ACTIVE','INACTIVE','SUSPENDED')",
+      "postgresqlType": "TEXT",
+      "nullable": false,
+      "defaultValue": "ACTIVE",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 8,
+      "issues": [
+        "ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type."
+      ]
+    },
+    {
+      "tableName": "customers",
+      "columnName": "preferences",
+      "mysqlType": "json",
+      "postgresqlType": "JSONB",
+      "nullable": true,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 9,
+      "issues": []
+    },
+    {
+      "tableName": "customers",
+      "columnName": "is_verified",
+      "mysqlType": "tinyint(1)",
+      "postgresqlType": "SMALLINT",
+      "nullable": false,
+      "defaultValue": "0",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 10,
+      "issues": [
+        "Verify whether TINYINT is being used as a boolean before mapping to PostgreSQL."
+      ]
+    },
+    {
+      "tableName": "customers",
+      "columnName": "created_at",
+      "mysqlType": "timestamp",
+      "postgresqlType": "TIMESTAMP",
+      "nullable": false,
+      "defaultValue": "CURRENT_TIMESTAMP",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 11,
+      "issues": []
+    },
+    {
+      "tableName": "customers",
+      "columnName": "updated_at",
+      "mysqlType": "timestamp",
+      "postgresqlType": "TIMESTAMP",
+      "nullable": false,
+      "defaultValue": "CURRENT_TIMESTAMP",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 12,
+      "issues": []
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "id",
+      "mysqlType": "bigint unsigned",
+      "postgresqlType": "BIGINT",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": true,
+      "isPrimaryKey": true,
+      "ordinalPosition": 1,
+      "issues": [
+        "AUTO_INCREMENT requires PostgreSQL identity/sequence handling."
+      ]
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "order_id",
+      "mysqlType": "bigint unsigned",
+      "postgresqlType": "BIGINT",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 2,
+      "issues": []
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "product_code",
+      "mysqlType": "varchar(40)",
+      "postgresqlType": "VARCHAR",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 3,
+      "issues": []
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "product_name",
+      "mysqlType": "varchar(200)",
+      "postgresqlType": "VARCHAR",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 4,
+      "issues": []
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "quantity",
+      "mysqlType": "smallint unsigned",
+      "postgresqlType": "SMALLINT",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 5,
+      "issues": []
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "unit_price",
+      "mysqlType": "decimal(12,2)",
+      "postgresqlType": "NUMERIC",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 6,
+      "issues": []
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "discount_percent",
+      "mysqlType": "decimal(5,2)",
+      "postgresqlType": "NUMERIC",
+      "nullable": false,
+      "defaultValue": "0.00",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 7,
+      "issues": []
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "line_total",
+      "mysqlType": "decimal(14,2)",
+      "postgresqlType": "NUMERIC",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 8,
+      "issues": []
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "item_status",
+      "mysqlType": "enum('NEW','PACKED','SHIPPED','RETURNED')",
+      "postgresqlType": "TEXT",
+      "nullable": false,
+      "defaultValue": "NEW",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 9,
+      "issues": [
+        "ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type."
+      ]
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "metadata",
+      "mysqlType": "json",
+      "postgresqlType": "JSONB",
+      "nullable": true,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 10,
+      "issues": []
+    },
+    {
+      "tableName": "order_items",
+      "columnName": "created_at",
+      "mysqlType": "datetime",
+      "postgresqlType": "TIMESTAMP",
+      "nullable": false,
+      "defaultValue": "CURRENT_TIMESTAMP",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 11,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "id",
+      "mysqlType": "bigint unsigned",
+      "postgresqlType": "BIGINT",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": true,
+      "isPrimaryKey": true,
+      "ordinalPosition": 1,
+      "issues": [
+        "AUTO_INCREMENT requires PostgreSQL identity/sequence handling."
+      ]
+    },
+    {
+      "tableName": "orders",
+      "columnName": "order_number",
+      "mysqlType": "varchar(40)",
+      "postgresqlType": "VARCHAR",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 2,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "customer_id",
+      "mysqlType": "bigint unsigned",
+      "postgresqlType": "BIGINT",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 3,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "order_status",
+      "mysqlType": "enum('PENDING','PROCESSING','SHIPPED','DELIVERED','CANCELLED')",
+      "postgresqlType": "TEXT",
+      "nullable": false,
+      "defaultValue": "PENDING",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 4,
+      "issues": [
+        "ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type."
+      ]
+    },
+    {
+      "tableName": "orders",
+      "columnName": "subtotal",
+      "mysqlType": "decimal(12,2)",
+      "postgresqlType": "NUMERIC",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 5,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "discount_amount",
+      "mysqlType": "decimal(10,2)",
+      "postgresqlType": "NUMERIC",
+      "nullable": false,
+      "defaultValue": "0.00",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 6,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "tax_amount",
+      "mysqlType": "decimal(10,2)",
+      "postgresqlType": "NUMERIC",
+      "nullable": false,
+      "defaultValue": "0.00",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 7,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "total_amount",
+      "mysqlType": "decimal(14,2)",
+      "postgresqlType": "NUMERIC",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 8,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "shipping_address",
+      "mysqlType": "json",
+      "postgresqlType": "JSONB",
+      "nullable": true,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 9,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "payment_method",
+      "mysqlType": "varchar(30)",
+      "postgresqlType": "VARCHAR",
+      "nullable": true,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 10,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "placed_at",
+      "mysqlType": "datetime",
+      "postgresqlType": "TIMESTAMP",
+      "nullable": false,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 11,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "delivered_at",
+      "mysqlType": "datetime",
+      "postgresqlType": "TIMESTAMP",
+      "nullable": true,
+      "defaultValue": null,
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 12,
+      "issues": []
+    },
+    {
+      "tableName": "orders",
+      "columnName": "created_at",
+      "mysqlType": "timestamp",
+      "postgresqlType": "TIMESTAMP",
+      "nullable": false,
+      "defaultValue": "CURRENT_TIMESTAMP",
+      "isAutoIncrement": false,
+      "isPrimaryKey": false,
+      "ordinalPosition": 13,
+      "issues": []
+    }
+  ],
+  "primaryKeys": [
+    {
+      "tableName": "customers",
+      "columns": [
+        "id"
+      ]
+    },
+    {
+      "tableName": "order_items",
+      "columns": [
+        "id"
+      ]
+    },
+    {
+      "tableName": "orders",
+      "columns": [
+        "id"
+      ]
+    }
+  ],
+  "foreignKeys": [
+    {
+      "tableName": "order_items",
+      "constraintName": "fk_items_order",
+      "columnName": "order_id",
+      "referencedTable": "orders",
+      "referencedColumn": "id",
+      "updateRule": "CASCADE",
+      "deleteRule": "RESTRICT"
+    },
+    {
+      "tableName": "orders",
+      "constraintName": "fk_orders_customer",
+      "columnName": "customer_id",
+      "referencedTable": "customers",
+      "referencedColumn": "id",
+      "updateRule": "CASCADE",
+      "deleteRule": "RESTRICT"
+    }
+  ],
+  "indexes": [
+    {
+      "tableName": "customers",
+      "name": "customer_code",
+      "columns": [
+        "customer_code"
+      ],
+      "unique": true,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "customers",
+      "name": "email",
+      "columns": [
+        "email"
+      ],
+      "unique": true,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "customers",
+      "name": "idx_customer_created",
+      "columns": [
+        "created_at"
+      ],
+      "unique": false,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "customers",
+      "name": "idx_customer_status",
+      "columns": [
+        "account_status"
+      ],
+      "unique": false,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "order_items",
+      "name": "idx_items_product",
+      "columns": [
+        "product_code"
+      ],
+      "unique": false,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "order_items",
+      "name": "idx_items_status",
+      "columns": [
+        "item_status"
+      ],
+      "unique": false,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "order_items",
+      "name": "uq_order_product",
+      "columns": [
+        "order_id",
+        "product_code"
+      ],
+      "unique": true,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "orders",
+      "name": "idx_orders_customer",
+      "columns": [
+        "customer_id"
+      ],
+      "unique": false,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "orders",
+      "name": "idx_orders_status_date",
+      "columns": [
+        "order_status",
+        "placed_at"
+      ],
+      "unique": false,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "orders",
+      "name": "idx_orders_total",
+      "columns": [
+        "total_amount"
+      ],
+      "unique": false,
+      "indexType": "BTREE"
+    },
+    {
+      "tableName": "orders",
+      "name": "order_number",
+      "columns": [
+        "order_number"
+      ],
+      "unique": true,
+      "indexType": "BTREE"
+    }
+  ],
+  "uniqueConstraints": [
+    {
+      "tableName": "customers",
+      "name": "customer_code",
+      "columns": [
+        "customer_code"
+      ]
+    },
+    {
+      "tableName": "customers",
+      "name": "email",
+      "columns": [
+        "email"
+      ]
+    },
+    {
+      "tableName": "order_items",
+      "name": "uq_order_product",
+      "columns": [
+        "order_id",
+        "product_code"
+      ]
+    },
+    {
+      "tableName": "orders",
+      "name": "order_number",
+      "columns": [
+        "order_number"
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Create tables",
+      "tasks": [
+        "Prepare and create table: customers",
+        "Prepare and create table: orders",
+        "Prepare and create table: order_items"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Primary keys and unique constraints",
+      "tasks": [
+        "Create primary key on customers (id)",
+        "Create primary key on order_items (id)",
+        "Create primary key on orders (id)",
+        "Create unique constraint customer_code on customers (customer_code)",
+        "Create unique constraint email on customers (email)",
+        "Create unique constraint uq_order_product on order_items (order_id, product_code)",
+        "Create unique constraint order_number on orders (order_number)"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Foreign keys",
+      "tasks": [
+        "Add fk_items_order on order_items.order_id referencing orders.id",
+        "Add fk_orders_customer on orders.customer_id referencing customers.id"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Indexes",
+      "tasks": [
+        "Create unique index customer_code on customers (customer_code)",
+        "Create unique index email on customers (email)",
+        "Create index idx_customer_created on customers (created_at)",
+        "Create index idx_customer_status on customers (account_status)",
+        "Create index idx_items_product on order_items (product_code)",
+        "Create index idx_items_status on order_items (item_status)",
+        "Create unique index uq_order_product on order_items (order_id, product_code)",
+        "Create index idx_orders_customer on orders (customer_id)",
+        "Create index idx_orders_status_date on orders (order_status, placed_at)",
+        "Create index idx_orders_total on orders (total_amount)",
+        "Create unique index order_number on orders (order_number)"
+      ]
+    },
+    {
+      "phase": 5,
+      "name": "Manual review",
+      "tasks": [
+        "customers.id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+        "customers.account_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+        "customers.is_verified: Verify whether TINYINT is being used as a boolean before mapping to PostgreSQL.",
+        "order_items.id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+        "order_items.item_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+        "orders.id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+        "orders.order_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+        "Verify referenced tables and columns exist, and confirm compatible data types before applying foreign-key constraints."
+      ]
+    }
+  ],
+  "warnings": [
+    "customers: id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "customers: account_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "customers: is_verified: Verify whether TINYINT is being used as a boolean before mapping to PostgreSQL.",
+    "order_items: id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "order_items: item_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "order_items: Foreign key fk_items_order uses ON UPDATE CASCADE. Verify PostgreSQL behavior.",
+    "orders: id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "orders: order_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "orders: Foreign key fk_orders_customer uses ON UPDATE CASCADE. Verify PostgreSQL behavior."
+  ],
+  "manualActions": [
+    "customers.id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "customers.account_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "customers.is_verified: Verify whether TINYINT is being used as a boolean before mapping to PostgreSQL.",
+    "order_items.id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "order_items.item_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "orders.id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "orders.order_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "Verify referenced tables and columns exist, and confirm compatible data types before applying foreign-key constraints."
+  ],
+  "summary": {
+    "totalTables": 3,
+    "totalColumns": 36,
+    "totalWarnings": 9,
+    "totalManualActions": 8,
+    "hasCircularDependencies": false
+  },
+  "sqlWarnings": [
+    "customers.id: BIGINT UNSIGNED can exceed PostgreSQL BIGINT range; using NUMERIC(20,0). Verify the source values.",
+    "customers.id: AUTO_INCREMENT was detected on a non-standard identity type. Review the generated definition.",
+    "customers.account_status: MySQL ENUM is mapped to TEXT. Add validation or a PostgreSQL ENUM if required.",
+    "customers.is_verified: TINYINT maps to SMALLINT. Review whether this column should be BOOLEAN.",
+    "orders.id: BIGINT UNSIGNED can exceed PostgreSQL BIGINT range; using NUMERIC(20,0). Verify the source values.",
+    "orders.id: AUTO_INCREMENT was detected on a non-standard identity type. Review the generated definition.",
+    "orders.customer_id: BIGINT UNSIGNED can exceed PostgreSQL BIGINT range; using NUMERIC(20,0). Verify the source values.",
+    "orders.order_status: MySQL ENUM is mapped to TEXT. Add validation or a PostgreSQL ENUM if required.",
+    "order_items.id: BIGINT UNSIGNED can exceed PostgreSQL BIGINT range; using NUMERIC(20,0). Verify the source values.",
+    "order_items.id: AUTO_INCREMENT was detected on a non-standard identity type. Review the generated definition.",
+    "order_items.order_id: BIGINT UNSIGNED can exceed PostgreSQL BIGINT range; using NUMERIC(20,0). Verify the source values.",
+    "order_items.item_status: MySQL ENUM is mapped to TEXT. Add validation or a PostgreSQL ENUM if required.",
+    "customers: id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "customers: account_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "customers: is_verified: Verify whether TINYINT is being used as a boolean before mapping to PostgreSQL.",
+    "order_items: id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "order_items: item_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "order_items: Foreign key fk_items_order uses ON UPDATE CASCADE. Verify PostgreSQL behavior.",
+    "orders: id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "orders: order_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "orders: Foreign key fk_orders_customer uses ON UPDATE CASCADE. Verify PostgreSQL behavior.",
+    "Manual review: customers.id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "Manual review: customers.account_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "Manual review: customers.is_verified: Verify whether TINYINT is being used as a boolean before mapping to PostgreSQL.",
+    "Manual review: order_items.id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "Manual review: order_items.item_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "Manual review: orders.id: AUTO_INCREMENT requires PostgreSQL identity/sequence handling.",
+    "Manual review: orders.order_status: ENUM requires special PostgreSQL handling. Consider a CHECK constraint or PostgreSQL ENUM type.",
+    "Manual review: Verify referenced tables and columns exist, and confirm compatible data types before applying foreign-key constraints."
+  ]
+}

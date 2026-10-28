@@ -13,7 +13,7 @@ import type {
 
 interface ColumnRow extends RowDataPacket {
   COLUMN_NAME: string;
-  DATA_TYPE: string;
+  COLUMN_TYPE: string;
   IS_NULLABLE: string;
   COLUMN_DEFAULT: unknown;
   EXTRA: string;
@@ -114,7 +114,7 @@ export class MySQLMigrationAdapter
         `
         SELECT
           COLUMN_NAME,
-          DATA_TYPE,
+           COLUMN_TYPE,
           IS_NULLABLE,
           COLUMN_DEFAULT,
           EXTRA,
@@ -131,7 +131,7 @@ export class MySQLMigrationAdapter
     return rows.map((row) => ({
       name: row.COLUMN_NAME,
 
-      dataType: row.DATA_TYPE,
+      dataType: row.COLUMN_TYPE,
 
       nullable:
         row.IS_NULLABLE === "YES",
@@ -316,17 +316,21 @@ async getForeignKeys(
         UniqueConstraintRow[]
       >(
         `
-        SELECT
-          CONSTRAINT_NAME,
-          COLUMN_NAME,
-          ORDINAL_POSITION
-        FROM information_schema.KEY_COLUMN_USAGE
-        WHERE TABLE_SCHEMA = DATABASE()
-          AND TABLE_NAME = ?
-          AND CONSTRAINT_NAME != 'PRIMARY'
-        ORDER BY
-          CONSTRAINT_NAME,
-          ORDINAL_POSITION
+       SELECT
+  kcu.CONSTRAINT_NAME,
+  kcu.COLUMN_NAME,
+  kcu.ORDINAL_POSITION
+FROM information_schema.KEY_COLUMN_USAGE kcu
+INNER JOIN information_schema.TABLE_CONSTRAINTS tc
+  ON kcu.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA
+  AND kcu.TABLE_NAME = tc.TABLE_NAME
+  AND kcu.CONSTRAINT_NAME = tc.CONSTRAINT_NAME
+WHERE kcu.TABLE_SCHEMA = DATABASE()
+  AND kcu.TABLE_NAME = ?
+  AND tc.CONSTRAINT_TYPE = 'UNIQUE'
+ORDER BY
+  kcu.CONSTRAINT_NAME,
+  kcu.ORDINAL_POSITION
         `,
         [tableName]
       );

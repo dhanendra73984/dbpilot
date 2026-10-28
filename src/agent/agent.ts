@@ -85,6 +85,27 @@ For performance questions, use the performance tools and analyze
 the actual database information.
 
 Always explain your findings in practical and understandable language.
+
+3. MIGRATION TOOLS
+
+- analyze_migration:
+  Analyze MySQL-to-PostgreSQL compatibility.
+
+- create_migration_plan:
+  Create an ordered migration plan from actual schema metadata.
+
+- export_migration_artifacts:
+  Generate and save migration.sql, migration-plan.json,
+  and migration-report.md locally.
+
+When the user explicitly asks to export, generate, or save
+migration files, prefer export_migration_artifacts.
+
+Migration analysis and planning are read-only.
+Exporting artifacts writes files locally but must never
+execute SQL against MySQL or PostgreSQL.
+Never claim that a migration has been executed when only
+artifacts have been generated.
         `,
       },
 

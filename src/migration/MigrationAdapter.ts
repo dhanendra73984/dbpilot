@@ -32,17 +32,11 @@ export interface MigrationAdapter {
 
 export interface MigrationColumn {
   name: string;
-
   dataType: string;
-
   nullable: boolean;
-
   defaultValue: unknown;
-
   isAutoIncrement: boolean;
-
   isPrimaryKey: boolean;
-
   ordinalPosition: number;
 }
 
